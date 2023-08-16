@@ -1,6 +1,6 @@
 const apiUrl = "https://pokeapi.co/api/v2/pokemon/"
 
-const randomPokemon = async () => {
+const getPokemon = async () => {
     const pokeIds = new Set()
     while(pokeIds.size < 10) {
         const randomNumber = Math.floor(Math.random() * 800)
@@ -12,6 +12,22 @@ const randomPokemon = async () => {
     const res = await fetch(apiUrl + pokeIdsArray[i])
     const pokemon = await res.json()
     console.log(pokemon)
+
+    
 }}
 
-randomPokemon()
+const showPokemon = (pokemon) => {
+    pokemon.sort( _ => Math.random() - 0.5)
+    pokemon.map(pokemon => {
+        return `
+        <div class ="card">
+            <h3>${pokemon.name}
+        </div>`
+    }).join('')
+}
+
+const resetGame = async () => {
+    const pokemon = await getPokemon ()
+    getPokemon([...pokemon, ...pokemon])
+}
+getPokemon()
