@@ -4,6 +4,15 @@ const game = document.getElementById('game')
 let isPaused = true
 let firstPick
 let matches
+var popped = []
+let guess
+
+document.getElementById('userButton').onclick = () => {
+    guess = document.getElementById('userGuess').value
+    guess = guess.toLowerCase()
+    console.log(guess)
+    checkForWin()
+}
 
 const colors = {
 	fire: '#FDDFDF',
@@ -25,11 +34,11 @@ const colors = {
 const loadPokemon = async () => {
     const randomIds = new Set();
     while(randomIds.size < 8){
-        const randomNumber = Math.ceil(Math.random() * 900);
+        const randomNumber = Math.ceil(Math.random() * 150);
         randomIds.add(randomNumber);
     }
-    const pokePromises = [...randomIds].map(id => fetch(apiUrl + id))
-    const results = await Promise.all(pokePromises);
+    const poke = [...randomIds].map(id => fetch(apiUrl + id))
+    const results = await Promise.all(poke);
     return await Promise.all(results.map(res => res.json()));
 }
 
@@ -48,6 +57,9 @@ const resetGame = () => {
 
 const displayPokemon = (pokemon) => {
     pokemon.sort(_ => Math.random() - 0.5);
+    console.log(popped)
+    popped = pokemon.pop(popped)
+    console.log(popped)
     const pokemonHTML = pokemon.map(pokemon => {
         const type = pokemon.types[0].type.name || 'normal'
         const color = colors[type]
@@ -62,6 +74,7 @@ const displayPokemon = (pokemon) => {
         </div>
     `}).join('');
     game.innerHTML = pokemonHTML;
+    return popped
 } 
 
 const clickCard = (event) => {
@@ -87,17 +100,15 @@ const clickCard = (event) => {
                 firstPick = null
                 isPaused = false
             }, 500);
-        } else {
-            matches++
-            if (matches === 8) {
-                console.log("Congrats you won!")
-            }
+        }
+        else {
             firstPick = null
             isPaused = false
         }
     }
+    }
     
-}
+
 
 const rotateElements = (elements) => {
     if(typeof elements !== 'object' || !elements.length) return;
@@ -110,6 +121,15 @@ const getFrontAndBackFromCard = (card) => {
     return [front, back]
 }
 
+        
+
+        const checkForWin = () => {
+            if (guess === popped.name) {
+                alert('congrats you won!')
+            } else {
+                alert('your guess was incorrect try again.')
+            }
+        }
 
 resetGame()
 
