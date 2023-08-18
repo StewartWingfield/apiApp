@@ -4,7 +4,7 @@ const game = document.getElementById('game')
 let isPaused = true
 let firstPick
 let matches
-var popped = []
+let popped = []
 let guess
 
 document.getElementById('userButton').onclick = () => {
